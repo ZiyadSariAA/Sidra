@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    direction: rtl;
+  }
+  
+  body {
+    font-family: 'Noto Sans Arabic', system-ui, -apple-system, sans-serif;
+    direction: rtl;
+  }
+
+  /* دعم الاتجاه من اليمين لليسار */
+  [dir="rtl"] {
+    direction: rtl;
+  }
+
+  [dir="rtl"] .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+  }
+
+  [dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x: 0.5rem;
+    margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
+  [dir="rtl"] .space-x-3 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x: 0.75rem;
+    margin-right: calc(0.75rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
+  [dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x: 1rem;
+    margin-right: calc(1rem * var(--tw-space-x-reverse));
+    margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
+  [dir="rtl"] .space-x-6 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x: 1.5rem;
+    margin-right: calc(1.5rem * var(--tw-space-x-reverse));
+    margin-left: calc(1.5rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
+  [dir="rtl"] .space-x-8 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x: 2rem;
+    margin-right: calc(2rem * var(--tw-space-x-reverse));
+    margin-left: calc(2rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
+  /* تحسين الخط العربي */
+  .font-arabic {
+    font-family: 'Noto Sans Arabic', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'liga' 1, 'kern' 1;
+  }
+
+  /* أنيميشن مخصص */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes bounceIn {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 1.2s ease-out 0.3s both;
+  }
+
+  .animate-fade-in-delay {
+    animation: fadeIn 1s ease-out 0.6s both;
+  }
+
+  .animate-bounce-in {
+    animation: bounceIn 1s ease-out 0.9s both;
+  }
+}
+
+@layer components {
+  /* تحسينات للأجهزة المتجاوبة */
+  .responsive-container {
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .responsive-grid {
+    @apply grid gap-4 sm:gap-6 lg:gap-8;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 320px));
+    justify-content: center;
+  }
+  
+  @media (max-width: 640px) {
+    .responsive-grid {
+      grid-template-columns: 1fr;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  }
+  
+  /* تحسين البطاقات للأجهزة المحمولة */
+  .mobile-card {
+    @apply bg-white rounded-xl shadow-md border border-gray-100 transition-all duration-300;
+  }
+  
+  @media (min-width: 768px) {
+    .mobile-card:hover {
+      @apply shadow-lg transform scale-105;
+    }
+  }
+  
+  /* تحسين النصوص للشاشات المختلفة */
+  .responsive-title-xl {
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight;
+  }
+  
+  .responsive-title-lg {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight;
+  }
+  
+  .responsive-title-md {
+    @apply text-xl sm:text-2xl md:text-3xl font-semibold leading-tight;
+  }
+  
+  .responsive-body-lg {
+    @apply text-base sm:text-lg md:text-xl leading-relaxed;
+  }
+  
+  .responsive-body {
+    @apply text-sm sm:text-base md:text-lg leading-relaxed;
+  }
+  
+  /* تحسين المسافات للأجهزة المحمولة */
+  .mobile-spacing {
+    @apply py-8 sm:py-12 md:py-16 lg:py-20;
+  }
+  
+  .mobile-mb {
+    @apply mb-6 sm:mb-8 md:mb-12;
+  }
+  
+  /* تحسين الأزرار للأجهزة المحمولة */
+  .btn-primary {
+    @apply bg-[#6D8751] hover:bg-[#5A6F42] text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300;
+  }
+  
+  @media (min-width: 768px) {
+    .btn-primary:hover {
+      @apply transform scale-105;
+    }
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent border-2 border-[#6D8751] text-[#6D8751] hover:bg-[#6D8751] hover:text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300;
+  }
+  
+  /* تحسين النماذج للأجهزة المحمولة */
+  .mobile-form-input {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#6D8751] focus:border-[#6D8751] transition-all duration-300 text-base;
+  }
+  
+  /* منع التكبير التلقائي على iOS */
+  @media screen and (max-width: 767px) {
+    .mobile-form-input {
+      font-size: 16px;
+    }
+  }
+  
+  /* دعم line-clamp */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
