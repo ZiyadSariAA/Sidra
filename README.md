@@ -1,8 +1,8 @@
-# سِدره - منصة الثقافة والفكر السعودي
+# سِدره - منصة الثقافة 
 
 ## 📖 وصف الموقع
 
-**سِدره** هي منصة إعلامية سعودية تركز على المحتوى الثقافي والفكري. نقدم مقالات وحلقات وسلسلة تثري الفكر والثقافة في المملكة العربية السعودية والعالم العربي.
+**سِدره** هي منصة إعلامية  تركز على المحتوى الثقافي والفكري. نقدم مقالات وحلقات وسلسلة تثري الفكر والثقافة في المملكة العربية السعودية والعالم العربي.
 
 ### ✨ المميزات الرئيسية
 
@@ -21,11 +21,11 @@
 
 ---
 
-# Sidra - Saudi Cultural & Intellectual Platform
+# Sidra -  Cultural & Intellectual Platform
 
 ## 📖 Website Description
 
-**Sidra** is a Saudi media platform focused on cultural and intellectual content. We provide articles, episodes, and series that enrich thought and culture in Saudi Arabia and the Arab world.
+**Sidra** is a  media platform focused on cultural and intellectual content. We provide articles, episodes, and series that enrich thought and culture in Saudi Arabia and the Arab world.
 
 ### ✨ Key Features
 
@@ -49,4 +49,3 @@ npm install
 npm run dev
 ```
 
-Visit `http://localhost:5173` to view the website.
