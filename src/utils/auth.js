@@ -52,3 +52,22 @@ export const getCurrentUser = () => {
     return null
   }
 }
+
+// Development helper functions for testing
+export const createTestUser = (role = 'author') => {
+  const testUsers = {
+    'author': { name: 'أحمد الكاتب', role: 'author', email: 'ahmed@example.com' },
+    'editor': { name: 'فاطمة المحررة', role: 'editor', email: 'fatima@example.com' },
+    'editor-in-chief': { name: 'محمد رئيس التحرير', role: 'editor-in-chief', email: 'mohammed@example.com' },
+    'admin': { name: 'علي المدير', role: 'admin', email: 'ali@example.com' },
+    'owner': { name: 'سارة المالكة', role: 'owner', email: 'sara@example.com' }
+  }
+  
+  const userData = testUsers[role] || testUsers.author
+  login(userData)
+  return userData
+}
+
+export const clearTestUser = () => {
+  logout()
+}

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import Logo from './Logo'
 import SearchIcon from '/assets/search.svg'
 import MenuIcon from '/assets/menu.svg'
+import AvatarMenu from './dashboard/AvatarMenu'
 
 const Header = () => {
   const location = useLocation()
@@ -92,11 +93,9 @@ const Header = () => {
             </Link>
           </div>
           
-          {/* Right side - Login and Menu */}
+          {/* Right side - Avatar Menu and Mobile Menu */}
           <div className="flex items-center space-x-4 space-x-reverse">
-            <button className="text-gray-600 hover:text-[#6D8751] transition-colors px-4 py-2 rounded-lg hover:bg-gray-50 hover:scale-105 transition-transform duration-200 font-arabic font-medium">
-              تسجيل الدخول
-            </button>
+            <AvatarMenu />
             <button className="md:hidden text-gray-600 hover:text-[#6D8751] transition-colors p-2 rounded-lg hover:bg-gray-50 hover:scale-110 transition-transform duration-200">
               <img src={MenuIcon} alt="القائمة" className="w-6 h-6" />
             </button>
