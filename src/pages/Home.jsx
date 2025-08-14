@@ -255,6 +255,17 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Call to Action */}
+      <div className="text-center">
+        <Link
+          to="/articles"
+          className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 md:py-4 md:text-lg md:px-10"
+        >
+          اقرأ المقالات
+          <span className="mr-2">→</span>
+        </Link>
+      </div>
     </div>
   )
 }

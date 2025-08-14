@@ -1,73 +1,78 @@
-// Authentication utility functions
+import { auth } from '../config/firebase';
+import { getUserData } from '../services/firebaseAuth';
 
-export const checkUserRole = () => {
-  // TODO: Implement actual authentication logic
-  // This should check localStorage, cookies, or API for user session
-  const user = localStorage.getItem('user')
-  if (!user) return null
-  
-  try {
-    const userData = JSON.parse(user)
-    return userData.role
-  } catch (error) {
-    return null
-  }
-}
-
-export const isAuthenticated = () => {
-  return checkUserRole() !== null
-}
-
-export const hasPermission = (requiredRole) => {
-  const userRole = checkUserRole()
-  if (!userRole) return false
-  
-  const roleHierarchy = {
-    'owner': 5,
-    'admin': 4,
-    'editor-in-chief': 3,
-    'editor': 2,
-    'author': 1
-  }
-  
-  return roleHierarchy[userRole] >= roleHierarchy[requiredRole]
-}
-
-export const login = (userData) => {
-  // TODO: Implement actual login logic
-  localStorage.setItem('user', JSON.stringify(userData))
-}
-
-export const logout = () => {
-  localStorage.removeItem('user')
-}
-
+// الحصول على المستخدم الحالي
 export const getCurrentUser = () => {
-  const user = localStorage.getItem('user')
-  if (!user) return null
-  
+  return auth.currentUser;
+};
+
+// التحقق من حالة المصادقة
+export const isAuthenticated = () => {
+  return !!auth.currentUser;
+};
+
+// تسجيل الخروج
+export const logout = async () => {
   try {
-    return JSON.parse(user)
+    await auth.signOut();
+    return { success: true };
   } catch (error) {
-    return null
+    console.error('خطأ في تسجيل الخروج:', error);
+    throw error;
   }
-}
+};
 
-// Development helper functions for testing
-export const createTestUser = (role = 'author') => {
-  const testUsers = {
-    'author': { name: 'أحمد الكاتب', role: 'author', email: 'ahmed@example.com' },
-    'editor': { name: 'فاطمة المحررة', role: 'editor', email: 'fatima@example.com' },
-    'editor-in-chief': { name: 'محمد رئيس التحرير', role: 'editor-in-chief', email: 'mohammed@example.com' },
-    'admin': { name: 'علي المدير', role: 'admin', email: 'ali@example.com' },
-    'owner': { name: 'سارة المالكة', role: 'owner', email: 'sara@example.com' }
+// مراقبة تغييرات حالة المصادقة
+export const onAuthStateChange = (callback) => {
+  return auth.onAuthStateChanged(callback);
+};
+
+// الحصول على معلومات المستخدم
+export const getUserInfo = async (uid) => {
+  try {
+    const result = await getUserData(uid);
+    return result;
+  } catch (error) {
+    console.error('خطأ في الحصول على معلومات المستخدم:', error);
+    throw error;
   }
-  
-  const userData = testUsers[role] || testUsers.author
-  login(userData)
-  return userData
-}
+};
 
+// التحقق من تحقق البريد الإلكتروني
+export const isEmailVerified = (user) => {
+  return user && user.emailVerified;
+};
+
+// التحقق من تحقق رقم الجوال (لم يعد مستخدماً)
+export const isPhoneVerified = (user) => {
+  return false; // لم يعد مستخدماً
+};
+
+// إنشاء مستخدم تجريبي للتطوير
+export const createTestUser = async () => {
+  try {
+    // إنشاء مستخدم تجريبي في localStorage للتطوير
+    const testUser = {
+      uid: 'test-user-123',
+      email: 'test@example.com',
+      displayName: 'مستخدم تجريبي',
+      role: 'writer'
+    };
+    localStorage.setItem('testUser', JSON.stringify(testUser));
+    return { success: true, user: testUser };
+  } catch (error) {
+    console.error('خطأ في إنشاء المستخدم التجريبي:', error);
+    throw error;
+  }
+};
+
+// مسح المستخدم التجريبي
 export const clearTestUser = () => {
-  logout()
-}
+  try {
+    localStorage.removeItem('testUser');
+    return { success: true };
+  } catch (error) {
+    console.error('خطأ في مسح المستخدم التجريبي:', error);
+    throw error;
+  }
+};
