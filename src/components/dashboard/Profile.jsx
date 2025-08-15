@@ -3,13 +3,14 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
 import { doc, updateDoc, collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import Message from './Message';
 
 const Profile = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, logout: authLogout } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [stats, setStats] = useState({
     totalArticles: 0,
     publishedArticles: 0,
@@ -178,6 +179,12 @@ const Profile = () => {
     }
   };
 
+  const handleLogout = () => {
+    console.log('تسجيل الخروج...');
+    authLogout();
+    navigate('/');
+  };
+
   const getRoleDisplayName = (role) => {
     switch (role) {
       case 'writer':
@@ -250,230 +257,211 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">الملف الشخصي</h1>
-              <p className="text-gray-600 mt-2">إدارة معلوماتك الشخصية</p>
+    <div className="space-y-6">
+      {/* Messages */}
+      {error && (
+        <Message
+          type="error"
+          message={error}
+          onClose={() => setError('')}
+          showClose={true}
+        />
+      )}
+      
+      {success && (
+        <Message
+          type="success"
+          message={success}
+          onClose={() => setSuccess('')}
+          showClose={true}
+        />
+      )}
+
+      {/* Profile Form */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100/50">
+        <div className="px-6 py-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Personal Information */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="displayName" className="block text-sm font-medium text-gray-700 mb-2 font-arabic">
+                  الاسم المعروض *
+                </label>
+                <input
+                  type="text"
+                  id="displayName"
+                  name="displayName"
+                  required
+                  value={profile.displayName}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6D8751] focus:border-[#6D8751] transition-all duration-300 font-arabic placeholder-gray-400"
+                  placeholder="أدخل اسمك المعروض"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2 font-arabic">
+                  البريد الإلكتروني
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={profile.email}
+                  disabled
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-50 text-gray-500 font-arabic cursor-not-allowed"
+                />
+                <p className="text-xs text-gray-500 mt-1 font-arabic">
+                  لا يمكن تغيير البريد الإلكتروني
+                </p>
+              </div>
             </div>
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
-            >
-              العودة للوحة التحكم
-            </button>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2 font-arabic">
+                  رقم الهاتف
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={profile.phone}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6D8751] focus:border-[#6D8751] transition-all duration-300 font-arabic placeholder-gray-400"
+                  placeholder="أدخل رقم هاتفك"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="website" className="block text-sm font-medium text-gray-700 mb-2 font-arabic">
+                  الموقع الإلكتروني
+                </label>
+                <input
+                  type="url"
+                  id="website"
+                  name="website"
+                  value={profile.website}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6D8751] focus:border-[#6D8751] transition-all duration-300 font-arabic placeholder-gray-400"
+                  placeholder="https://example.com"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-2 font-arabic">
+                نبذة شخصية
+              </label>
+              <textarea
+                id="bio"
+                name="bio"
+                rows="4"
+                value={profile.bio}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6D8751] focus:border-[#6D8751] transition-all duration-300 font-arabic resize-none placeholder-gray-400"
+                placeholder="اكتب نبذة مختصرة عن نفسك"
+              />
+            </div>
+
+            {/* Submit Button */}
+            <div className="flex items-center justify-between pt-4">
+              <button
+                type="button"
+                onClick={() => navigate('/dashboard')}
+                className="px-6 py-3 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all duration-300 font-arabic hover:scale-105"
+              >
+                <svg className="w-4 h-4 inline ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                العودة للوحة التحكم
+              </button>
+              
+              <button
+                type="submit"
+                disabled={loading}
+                className="px-8 py-3 text-sm font-medium text-white bg-[#6D8751] hover:bg-[#5a6f42] rounded-xl transition-all duration-300 font-arabic shadow-sm hover:shadow-md hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+              >
+                {loading ? (
+                  <>
+                    <svg className="w-4 h-4 inline ml-2 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    جاري الحفظ...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4 inline ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    حفظ التغييرات
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* User Statistics */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100/50 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-gray-900 font-arabic">إحصائياتي</h2>
+          <button
+            onClick={refreshStats}
+            className="px-4 py-2 text-sm font-medium text-[#6D8751] bg-[#6D8751]/10 hover:bg-[#6D8751]/20 rounded-xl transition-all duration-300 font-arabic hover:scale-105"
+          >
+            <svg className="w-4 h-4 inline ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            تحديث
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="text-center p-4 bg-gray-50 rounded-xl">
+            <div className="text-2xl font-bold text-gray-900">{stats.totalArticles}</div>
+            <div className="text-sm text-gray-600 font-arabic">إجمالي المقالات</div>
+          </div>
+          <div className="text-center p-4 bg-green-50 rounded-xl">
+            <div className="text-2xl font-bold text-green-600">{stats.publishedArticles}</div>
+            <div className="text-sm text-green-600 font-arabic">المنشورة</div>
+          </div>
+          <div className="text-center p-4 bg-blue-50 rounded-xl">
+            <div className="text-2xl font-bold text-blue-600">{stats.approvedArticles}</div>
+            <div className="text-sm text-blue-600 font-arabic">الموافق عليها</div>
+          </div>
+          <div className="text-center p-4 bg-yellow-50 rounded-xl">
+            <div className="text-2xl font-bold text-yellow-600">{stats.underReviewArticles}</div>
+            <div className="text-sm text-yellow-600 font-arabic">قيد المراجعة</div>
+          </div>
+          <div className="text-center p-4 bg-gray-50 rounded-xl">
+            <div className="text-2xl font-bold text-gray-600">{stats.draftArticles}</div>
+            <div className="text-sm text-gray-600 font-arabic">المسودات</div>
+          </div>
+          <div className="text-center p-4 bg-red-50 rounded-xl">
+            <div className="text-2xl font-bold text-red-600">{stats.rejectedArticles}</div>
+            <div className="text-sm text-red-600 font-arabic">المرفوضة</div>
           </div>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Profile Form */}
-          <div className="lg:col-span-2">
-            <div className="bg-white shadow rounded-lg">
-              <div className="px-6 py-8">
-                <h3 className="text-lg font-medium text-gray-900 mb-6">المعلومات الشخصية</h3>
-                
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Messages */}
-                  {error && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                      {error}
-                    </div>
-                  )}
-                  
-                  {success && (
-                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-                      {success}
-                    </div>
-                  )}
-
-                  {/* Display Name */}
-                  <div>
-                    <label htmlFor="displayName" className="block text-sm font-medium text-gray-700 mb-2">
-                      الاسم الكامل *
-                    </label>
-                    <input
-                      type="text"
-                      id="displayName"
-                      name="displayName"
-                      required
-                      value={profile.displayName}
-                      onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      placeholder="أدخل اسمك الكامل"
-                    />
-                  </div>
-
-                  {/* Email */}
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      البريد الإلكتروني
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={profile.email}
-                      disabled
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500"
-                    />
-                    <p className="text-sm text-gray-500 mt-1">لا يمكن تغيير البريد الإلكتروني</p>
-                  </div>
-
-                  {/* Role */}
-                  <div>
-                    <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
-                      الدور في النظام
-                    </label>
-                    <input
-                      type="text"
-                      id="role"
-                      name="role"
-                      value={getRoleDisplayName(profile.role)}
-                      disabled
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500"
-                    />
-                    <p className="text-sm text-gray-500 mt-1">{getRoleDescription(profile.role)}</p>
-                  </div>
-
-                  {/* Bio */}
-                  <div>
-                    <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-2">
-                      نبذة شخصية
-                    </label>
-                    <textarea
-                      id="bio"
-                      name="bio"
-                      rows="4"
-                      value={profile.bio}
-                      onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      placeholder="اكتب نبذة مختصرة عن نفسك..."
-                    />
-                  </div>
-
-                  {/* Website and Phone */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="website" className="block text-sm font-medium text-gray-700 mb-2">
-                        الموقع الإلكتروني
-                      </label>
-                      <input
-                        type="url"
-                        id="website"
-                        name="website"
-                        value={profile.website}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="https://example.com"
-                      />
-                    </div>
-
-                    <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                        رقم الهاتف
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={profile.phone}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="+966 50 123 4567"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Submit Button */}
-                  <div className="flex justify-end">
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
-                    >
-                      {loading ? 'جاري الحفظ...' : 'حفظ التغييرات'}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-
-          {/* Stats Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="bg-white shadow rounded-lg p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-medium text-gray-900">إحصائياتي</h3>
-                <button
-                  onClick={refreshStats}
-                  className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
-                >
-                  🔄 تحديث
-                </button>
-              </div>
-              
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">إجمالي المقالات</span>
-                  <span className="text-2xl font-bold text-indigo-600">{stats.totalArticles}</span>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">المقالات المنشورة</span>
-                  <span className="text-xl font-semibold text-green-600">{stats.publishedArticles}</span>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">الموافق عليها</span>
-                  <span className="text-xl font-semibold text-blue-600">{stats.approvedArticles}</span>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">قيد المراجعة</span>
-                  <span className="text-xl font-semibold text-yellow-600">{stats.underReviewArticles}</span>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">المقالات المسودة</span>
-                  <span className="text-xl font-semibold text-gray-600">{stats.draftArticles}</span>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">المرفوضة</span>
-                  <span className="text-xl font-semibold text-red-600">{stats.rejectedArticles}</span>
-                </div>
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <h4 className="text-sm font-medium text-gray-900 mb-3">إجراءات سريعة</h4>
-                <div className="space-y-2">
-                  <button
-                    onClick={() => navigate('/dashboard/write')}
-                    className="w-full text-left px-3 py-2 text-sm text-indigo-600 hover:bg-indigo-50 rounded-md"
-                  >
-                    ✍️ كتابة مقال جديد
-                  </button>
-                  
-                  <button
-                    onClick={() => navigate('/dashboard/my-articles')}
-                    className="w-full text-left px-3 py-2 text-sm text-green-600 hover:bg-green-50 rounded-md"
-                  >
-                    📰 مقالاتي ({stats.totalArticles})
-                  </button>
-                  
-                  <button
-                    onClick={() => navigate('/dashboard')}
-                    className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-md"
-                  >
-                    📊 العودة للوحة التحكم
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+      {/* Logout Section */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100/50 p-6">
+        <div className="text-center space-y-4">
+          <h3 className="text-lg font-medium text-gray-900 font-arabic">تسجيل الخروج</h3>
+          <p className="text-sm text-gray-600 font-arabic">
+            عند تسجيل الخروج، ستتم إعادة توجيهك إلى الصفحة الرئيسية
+          </p>
+          <button
+            onClick={handleLogout}
+            className="px-6 py-3 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-xl transition-all duration-300 font-arabic shadow-sm hover:shadow-md hover:scale-105"
+          >
+            <svg className="w-4 h-4 inline ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            تسجيل الخروج
+          </button>
         </div>
       </div>
     </div>

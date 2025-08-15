@@ -20,7 +20,18 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// Debug: Log Firebase configuration
 console.log('Firebase initialized successfully');
+console.log('Project ID:', firebaseConfig.projectId);
+console.log('Auth Domain:', firebaseConfig.authDomain);
+console.log('Auth instance:', auth);
+console.log('DB instance:', db);
+
+// Ensure we're not using emulator
+if (process.env.NODE_ENV === 'development') {
+  console.log('Development mode - checking for emulator connection');
+  console.log('Auth config:', auth.config);
+}
 
 export { auth, db };
 export default app; 

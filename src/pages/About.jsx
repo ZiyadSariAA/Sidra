@@ -37,8 +37,43 @@ const About = () => {
     {
       name: "معاذ العتيبي",
       role: "المؤسس",
-      bio: "مؤسس منصة سِدره للثقافة والفكر العربي، كاتب ومفكر يسعى لإثراء المحتوى الثقافي في العالم العربي",
+      bio: "مؤسس منصة سِدرة للثقافة والفكر العربي، كاتب ومفكر يسعى لإثراء المحتوى الثقافي في العالم العربي",
       image: "/assets/6x4 (2)_page-0001.jpg"
+    }
+  ]
+
+  const socialPlatforms = [
+    {
+      name: "X (تويتر)",
+      handle: "@sidra_sa",
+      url: "https://x.com/sidra_sa",
+      icon: "𝕏",
+      color: "bg-black text-white",
+      followers: "25K+"
+    },
+    {
+      name: "إنستغرام",
+      handle: "@sidra_sa",
+      url: "https://instagram.com/sidra_sa",
+      icon: "📷",
+      color: "bg-gradient-to-r from-purple-500 to-pink-500 text-white",
+      followers: "15K+"
+    },
+    {
+      name: "يوتيوب",
+      handle: "سِدرة",
+      url: "https://youtube.com/@sidra_sa",
+      icon: "📺",
+      color: "bg-red-600 text-white",
+      followers: "10K+"
+    },
+    {
+      name: "لينكد إن",
+      handle: "سِدرة",
+      url: "https://linkedin.com/company/sidra-sa",
+      icon: "💼",
+      color: "bg-blue-600 text-white",
+      followers: "5K+"
     }
   ]
 
@@ -46,10 +81,10 @@ const About = () => {
     <div className="min-h-screen bg-gray-50" dir="rtl">
       {/* Hero Section */}
       <section className="bg-white py-20">
-        <div className="container mx-auto px-6">
+        <div className="responsive-container">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in">
-              عن سِدره
+              عن سِدرة
               <span className="block text-[#6D8751] animate-slide-up">منصة الثقافة والفكر العربي</span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 leading-relaxed animate-fade-in-delay">
@@ -60,12 +95,12 @@ const About = () => {
         </div>
       </section>
 
-      {/* قصة سِدره */}
+      {/* قصة سِدرة */}
       <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-6">
+        <div className="responsive-container">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">قصة سِدره</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">قصة سِدرة</h2>
               <div className="w-24 h-1 bg-[#6D8751] mx-auto mb-8"></div>
             </div>
             
@@ -73,7 +108,7 @@ const About = () => {
               <div className="space-y-6">
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">من نحن؟</h3>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  سِدره منصة إعلامية عربية تأسست عام 2023 بهدف إثراء المشهد الثقافي والفكري في العالم العربي. نحن نؤمن بقوة الكلمة المكتوبة والمسموعة في تشكيل الوعي وبناء المستقبل.
+                  سِدرة منصة إعلامية عربية تأسست عام 2023 بهدف إثراء المشهد الثقافي والفكري في العالم العربي. نحن نؤمن بقوة الكلمة المكتوبة والمسموعة في تشكيل الوعي وبناء المستقبل.
                 </p>
                 <p className="text-lg text-gray-700 leading-relaxed">
                   نقدم محتوى متنوع يغطي الثقافة والفكر والأدب والتقنية والاقتصاد، من خلال مقالات وحلقات إذاعية وسلسلة متخصصة تثري عقول قرائنا ومستمعينا.
@@ -83,7 +118,7 @@ const About = () => {
               <div className="relative">
                 <div className="bg-[#6D8751] rounded-2xl p-8 text-white text-center">
                   <div className="text-6xl mb-4">🌳</div>
-                  <h4 className="text-2xl font-bold mb-2">سِدره</h4>
+                  <h4 className="text-2xl font-bold mb-2">سِدرة</h4>
                   <p className="text-lg opacity-90">شجرة المعرفة والثقافة</p>
                 </div>
               </div>
@@ -94,7 +129,7 @@ const About = () => {
 
       {/* قيمنا */}
       <section className="py-16 bg-white">
-        <div className="container mx-auto px-6">
+        <div className="responsive-container">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">قيمنا</h2>
             <div className="w-24 h-1 bg-[#6D8751] mx-auto mb-8"></div>
@@ -117,7 +152,7 @@ const About = () => {
 
       {/* الإحصائيات */}
       <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-6">
+        <div className="responsive-container">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">إنجازاتنا</h2>
             <div className="w-24 h-1 bg-[#6D8751] mx-auto mb-8"></div>
@@ -137,9 +172,9 @@ const About = () => {
 
       {/* فريق العمل */}
       <section className="py-16 bg-white">
-        <div className="container mx-auto px-6">
+        <div className="responsive-container">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">فريق سِدره</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">فريق سِدرة</h2>
             <div className="w-24 h-1 bg-[#6D8751] mx-auto mb-8"></div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               فريق متخصص من الكتاب والمفكرين والمحررين يعملون لخدمة الثقافة والفكر
@@ -169,9 +204,43 @@ const About = () => {
         </div>
       </section>
 
+      {/* تابعنا عبر المنصات */}
+      <section className="py-16 bg-gray-50">
+        <div className="responsive-container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">تابعنا على المنصات الرقمية</h2>
+            <div className="w-24 h-1 bg-[#6D8751] mx-auto mb-8"></div>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              انضم إلى مجتمع سِدرة الرقمي وكن أول من يعرف عن أحدث المحتوى والأخبار
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {socialPlatforms.map((platform, index) => (
+              <div key={index} className="bg-white rounded-xl p-6 text-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+                <div className={`w-16 h-16 rounded-full ${platform.color} flex items-center justify-center mx-auto mb-4 text-2xl font-bold`}>
+                  {platform.icon}
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{platform.name}</h3>
+                <p className="text-[#6D8751] font-medium mb-2">{platform.handle}</p>
+                <p className="text-gray-600 mb-4">{platform.followers} متابع</p>
+                <a 
+                  href={platform.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-block bg-[#6D8751] text-white px-4 py-2 rounded-lg hover:bg-[#5A6F42] transition-colors duration-300"
+                >
+                  تابعنا
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Vision Section */}
       <section className="py-16 bg-[#6D8751] text-white">
-        <div className="container mx-auto px-6">
+        <div className="responsive-container">
           <div className="text-center max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold mb-8">رؤيتنا</h2>
             <p className="text-xl leading-relaxed mb-8">
@@ -201,7 +270,7 @@ const About = () => {
 
       {/* معلومات التواصل */}
       <section id="contact" className="py-16 bg-white">
-        <div className="container mx-auto px-6">
+        <div className="responsive-container">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">معلومات التواصل</h2>
             <div className="w-24 h-1 bg-[#6D8751] mx-auto mb-8"></div>

@@ -7,8 +7,8 @@ import { AuthProvider } from './contexts/AuthContext'
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <ScrollToTop />
         <Routes>
           {/* Public Routes */}
@@ -17,8 +17,8 @@ function App() {
           {/* Dashboard Routes */}
           <Route path="/dashboard/*" element={<DashboardRoutes />} />
         </Routes>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   )
 }
 

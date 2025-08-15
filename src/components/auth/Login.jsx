@@ -33,7 +33,12 @@ const Login = () => {
       if (result.success) {
         setSuccess('تم تسجيل الدخول بنجاح');
         setTimeout(() => {
-          navigate('/dashboard');
+          // Redirect based on user role
+          if (result.userData?.role === 'reader') {
+            navigate('/reader-dashboard');
+          } else {
+            navigate('/dashboard');
+          }
         }, 1500);
       }
     } catch (error) {

@@ -9,10 +9,11 @@ import ArticleDetail from '../pages/ArticleDetail'
 import Episodes from '../pages/Episodes'
 import Series from '../pages/Series'
 import Join from '../pages/Join'
-import Login from '../components/auth/Login'
-import Register from '../components/auth/Register'
+import UnifiedAuth from '../components/auth/UnifiedAuth'
 import ArticlesList from '../components/reader/ArticlesList'
 import ReaderArticleDetail from '../components/reader/ArticleDetail'
+import ReaderDashboard from '../pages/ReaderDashboard'
+import Account from '../pages/Account'
 
 const PublicRoutes = () => {
   return (
@@ -36,10 +37,12 @@ const PublicRoutes = () => {
           {/* Reader Routes */}
           <Route path="/reader/articles" element={<ArticlesList />} />
           <Route path="/reader/article/:articleId" element={<ReaderArticleDetail />} />
+          <Route path="/reader-dashboard" element={<ReaderDashboard />} />
+          <Route path="/account" element={<Account />} />
           
           {/* Auth Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<UnifiedAuth />} />
+          <Route path="/register" element={<UnifiedAuth />} />
         </Routes>
       </main>
       <Footer />

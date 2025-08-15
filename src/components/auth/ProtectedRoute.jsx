@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
 const ProtectedRoute = ({ children, requiredRole = null }) => {
-  const { currentUser, userProfile, loading, isAuthenticated } = useAuth();
+  const { currentUser, userProfile, loading, isAuthenticated, isInitialized } = useAuth();
+  const [isStable, setIsStable] = useState(false);
+
+  // انتظار حتى تستقر حالة المصادقة
+  useEffect(() => {
+    if (isInitialized && !loading) {
+      // تأخير بسيط لضمان استقرار الحالة
+      const timer = setTimeout(() => {
+        setIsStable(true);
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isInitialized, loading]);
 
   // Show loading while checking authentication
-  if (loading) {
+  if (loading || !isInitialized || !isStable) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center">
         <div className="text-center">
@@ -19,15 +32,16 @@ const ProtectedRoute = ({ children, requiredRole = null }) => {
   }
 
   // Check if user is authenticated
-  if (!isAuthenticated) {
+  if (!currentUser) {
+    console.log('User not authenticated, redirecting to login');
     return <Navigate to="/login" replace />;
   }
 
   // Check if role is required
-  if (requiredRole) {
+  if (requiredRole && userProfile) {
     const hasRequiredRole = Array.isArray(requiredRole) 
-      ? requiredRole.includes(userProfile?.role)
-      : userProfile?.role === requiredRole;
+      ? requiredRole.includes(userProfile.role)
+      : userProfile.role === requiredRole;
 
     if (!hasRequiredRole) {
       return (
@@ -57,6 +71,7 @@ const ProtectedRoute = ({ children, requiredRole = null }) => {
   }
 
   // User is authenticated and has required role (if any)
+  console.log('User authenticated and authorized, rendering protected content');
   return children;
 };
 

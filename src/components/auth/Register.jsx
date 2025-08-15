@@ -18,6 +18,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [emailExists, setEmailExists] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,9 +26,56 @@ const Register = () => {
       ...prev,
       [name]: value
     }));
+    
+    // التحقق من وجود الإيميل عند تغييره
+    if (name === 'email' && value) {
+      checkEmailExists(value);
+    }
+  };
+
+  // التحقق من وجود الإيميل
+  const checkEmailExists = async (email) => {
+    try {
+      // استخدام Firebase Auth مباشرة للتحقق من وجود الإيميل
+      const { fetchSignInMethodsForEmail } = await import('firebase/auth');
+      const { auth } = await import('../../config/firebase');
+      
+      console.log('🔍 بداية التحقق من الإيميل:', email);
+      
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+      const exists = methods.length > 0;
+      
+      console.log('📧 نتيجة التحقق:', { email, exists, methods, methodsLength: methods.length });
+      
+      setEmailExists(exists);
+      
+      if (exists) {
+        console.log('✅ الإيميل موجود بالفعل!');
+      } else {
+        console.log('❌ الإيميل غير موجود');
+      }
+      
+    } catch (error) {
+      console.error('🚨 خطأ في التحقق من الإيميل:', error);
+      
+      // إذا كان الخطأ بسبب عدم وجود الإيميل، فهذا يعني أنه غير موجود
+      if (error.code === 'auth/user-not-found') {
+        setEmailExists(false);
+        console.log('❌ الإيميل غير موجود (user-not-found)');
+      } else {
+        // أي خطأ آخر، نعتبر أن الإيميل موجود (أكثر أماناً)
+        setEmailExists(true);
+        console.log('⚠️ خطأ آخر، نعتبر الإيميل موجود:', error.code);
+      }
+    }
   };
 
   const validateForm = () => {
+    if (emailExists) {
+      setError('لا يمكن إنشاء حساب ببريد إلكتروني مسجل بالفعل! استخدم "تسجيل الدخول" بدلاً من ذلك');
+      return false;
+    }
+    
     if (formData.password !== formData.confirmPassword) {
       setError('كلمة المرور غير متطابقة');
       return false;
@@ -71,7 +119,12 @@ const Register = () => {
       if (result.success) {
         setSuccess('تم إنشاء الحساب بنجاح');
         setTimeout(() => {
-          navigate('/dashboard');
+          // Redirect based on user role
+          if (result.userData?.role === 'reader') {
+            navigate('/reader-dashboard');
+          } else {
+            navigate('/dashboard');
+          }
         }, 1500);
       }
       
@@ -81,7 +134,7 @@ const Register = () => {
       // رسائل خطأ مخصصة باللغة العربية
       switch (error.code) {
         case 'auth/email-already-in-use':
-          setError('البريد الإلكتروني مستخدم بالفعل');
+          setError('البريد الإلكتروني مستخدم بالفعل! استخدم "تسجيل الدخول" بدلاً من "إنشاء حساب"');
           break;
         case 'auth/invalid-email':
           setError('البريد الإلكتروني غير صحيح');
@@ -113,6 +166,20 @@ const Register = () => {
               تسجيل الدخول بحساب موجود
             </Link>
           </p>
+          {emailExists && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-sm text-red-800 text-center">
+                🚫 <strong>تنبيه:</strong> هذا البريد الإلكتروني مسجل بالفعل!
+                <br />
+                <span className="text-xs text-red-600 mt-2 block">
+                  لا يمكن إنشاء حساب جديد بهذا الإيميل
+                </span>
+                <Link to="/login" className="font-medium text-red-700 hover:text-red-600 underline mt-2 inline-block">
+                  اضغط هنا لتسجيل الدخول بدلاً من إنشاء حساب جديد
+                </Link>
+              </p>
+            </div>
+          )}
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -177,9 +244,21 @@ const Register = () => {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className={`mt-1 appearance-none relative block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:z-10 sm:text-sm ${
+                  emailExists 
+                    ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+                    : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                }`}
                 placeholder="أدخل بريدك الإلكتروني"
               />
+              {emailExists && (
+                <div className="mt-2 text-sm text-red-600 bg-red-50 p-2 rounded-md">
+                  ⚠️ هذا البريد الإلكتروني مسجل بالفعل! 
+                  <Link to="/login" className="font-medium text-red-700 hover:text-red-600 underline mr-2">
+                    اضغط هنا لتسجيل الدخول
+                  </Link>
+                </div>
+              )}
             </div>
             
             <div>

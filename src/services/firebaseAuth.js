@@ -3,7 +3,8 @@ import {
   onAuthStateChanged as firebaseOnAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  updateProfile
+  updateProfile,
+  fetchSignInMethodsForEmail
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
@@ -64,6 +65,12 @@ export const registerWithEmail = async (email, password, userData) => {
       lastName: userData.lastName || '',
       displayName: userData.firstName && userData.lastName ? `${userData.firstName} ${userData.lastName}` : '',
       role: userData.role || 'writer', // تغيير القيمة الافتراضية إلى writer
+      bio: '',
+      linkedin: '',
+      twitter: '',
+      instagram: '',
+      website: '',
+      phone: '',
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
       isActive: true,
@@ -112,5 +119,84 @@ export const updateUserData = async (uid, userData) => {
   } catch (error) {
     console.error('خطأ في تحديث بيانات المستخدم:', error);
     throw error;
+  }
+}; 
+
+// التحقق من وجود الإيميل في Firebase
+export const checkEmailExists = async (email) => {
+  try {
+    // Normalize email: trim and lowercase
+    const normalizedEmail = email.trim().toLowerCase();
+    console.log('Original email:', email);
+    console.log('Normalized email:', normalizedEmail);
+    
+    // Debug: Log auth instance
+    console.log('Auth instance:', auth);
+    console.log('Auth config:', auth.config);
+    console.log('DB instance:', db);
+    
+    // First: Check Firebase Auth
+    console.log('🔍 Checking Firebase Auth...');
+    const { fetchSignInMethodsForEmail } = await import('firebase/auth');
+    
+    try {
+      const methods = await fetchSignInMethodsForEmail(auth, normalizedEmail);
+      const authExists = methods.length > 0;
+      
+      console.log('📧 Firebase Auth result:', { 
+        email: normalizedEmail, 
+        authExists, 
+        methods, 
+        methodsLength: methods.length 
+      });
+      
+      if (authExists) {
+        console.log('✅ Email exists in Firebase Auth!');
+        return { 
+          exists: true, 
+          methods: methods 
+        };
+      }
+    } catch (authError) {
+      console.log('⚠️ Firebase Auth error:', authError.code, authError.message);
+    }
+    
+    // Second: Check Firestore if not found in Auth
+    console.log('🔍 Checking Firestore...');
+    const { collection, query, where, getDocs } = await import('firebase/firestore');
+    
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, where('email', '==', normalizedEmail));
+    const querySnapshot = await getDocs(q);
+    
+    const firestoreExists = !querySnapshot.empty;
+    console.log('📧 Firestore result:', { 
+      email: normalizedEmail, 
+      firestoreExists, 
+      docsCount: querySnapshot.size 
+    });
+    
+    if (firestoreExists) {
+      console.log('✅ Email exists in Firestore!');
+      return { 
+        exists: true, 
+        methods: ['password'] 
+      };
+    }
+    
+    console.log('❌ Email not found anywhere');
+    return { 
+      exists: false, 
+      methods: [] 
+    };
+    
+  } catch (error) {
+    console.error('🚨 Email check error:', error);
+    console.error('Error details:', {
+      code: error.code,
+      message: error.message,
+      stack: error.stack
+    });
+    return { exists: false, methods: [] };
   }
 }; 

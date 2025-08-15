@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { auth } from '../config/firebase';
-import { onAuthStateChanged, getUserData } from '../services/firebaseAuth';
+import { onAuthStateChanged, getUserData, signOut } from '../services/firebaseAuth';
 
 const AuthContext = createContext();
 
@@ -16,51 +16,92 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged((user) => {
-      console.log('AuthStateChanged - user:', user);
-      setCurrentUser(user);
-      
-      if (user) {
-        // تحميل بيانات المستخدم من Firestore
-        loadUserProfile(user.uid);
-      } else {
-        setUserProfile(null);
-        setLoading(false);
-      }
-    });
-
-    return unsubscribe;
-  }, []);
-
-  const loadUserProfile = async (uid) => {
+  // تحميل بيانات المستخدم مع إعادة المحاولة
+  const loadUserProfile = useCallback(async (uid, retryCount = 0) => {
     try {
-      console.log('Loading user profile for UID:', uid);
+      console.log('Loading user profile for UID:', uid, 'retry:', retryCount);
       const result = await getUserData(uid);
       console.log('getUserData result:', result);
       
       if (result.success) {
         console.log('Setting userProfile:', result.data);
         setUserProfile(result.data);
+        setLoading(false);
       } else {
         console.error('Failed to load user profile:', result.error);
+        // إعادة المحاولة مرة واحدة
+        if (retryCount < 1) {
+          setTimeout(() => loadUserProfile(uid, retryCount + 1), 1000);
+        } else {
+          setLoading(false);
+        }
       }
     } catch (error) {
       console.error('خطأ في تحميل بيانات المستخدم:', error);
-    } finally {
-      setLoading(false);
+      // إعادة المحاولة مرة واحدة
+      if (retryCount < 1) {
+        setTimeout(() => loadUserProfile(uid, retryCount + 1), 1000);
+      } else {
+        setLoading(false);
+      }
     }
-  };
+  }, []);
 
+  useEffect(() => {
+    console.log('AuthProvider mounted, setting up auth listener');
+    
+    const unsubscribe = onAuthStateChanged((user) => {
+      console.log('AuthStateChanged - user:', user);
+      
+      if (user) {
+        setCurrentUser(user);
+        // تحميل بيانات المستخدم من Firestore
+        loadUserProfile(user.uid);
+      } else {
+        console.log('No user, clearing state');
+        setCurrentUser(null);
+        setUserProfile(null);
+        setLoading(false);
+      }
+      
+      if (!isInitialized) {
+        setIsInitialized(true);
+      }
+    });
+
+    // تنظيف عند إلغاء الاشتراك
+    return () => {
+      console.log('AuthProvider unmounting, cleaning up');
+      unsubscribe();
+    };
+  }, [loadUserProfile, isInitialized]);
+
+  // منع إعادة التحميل غير الضرورية
   const isAuthenticated = !!currentUser;
 
+  // دالة تسجيل الخروج
+  const logout = useCallback(async () => {
+    try {
+      await signOut();
+      setCurrentUser(null);
+      setUserProfile(null);
+    } catch (error) {
+      console.error('خطأ في تسجيل الخروج:', error);
+    }
+  }, []);
+
   const value = {
+    user: currentUser,
+    userData: userProfile,
     currentUser,
     userProfile,
-    loading,
+    loading: loading || !isInitialized,
     isAuthenticated,
-    loadUserProfile
+    loadUserProfile,
+    isInitialized,
+    logout
   };
 
   console.log('AuthContext value:', value);

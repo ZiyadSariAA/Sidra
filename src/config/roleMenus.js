@@ -1,55 +1,56 @@
 export const roleMenus = {
   // Default menu for all roles
   default: [
-    { key: 'overview', label: 'نظرة عامة', path: '/dashboard/overview', icon: '📊' },
-    { key: 'work', label: 'العمل', path: '/dashboard/work', icon: '💼' },
-    { key: 'content', label: 'المحتوى', path: '/dashboard/content', icon: '📝' },
-    { key: 'analytics', label: 'التحليلات', path: '/dashboard/analytics', icon: '📈' },
-    { key: 'settings', label: 'الإعدادات', path: '/dashboard/settings', icon: '⚙️' },
+    { key: 'overview', label: 'نظرة عامة', path: '/dashboard', icon: '📊' },
+    { key: 'write', label: 'كتابة مقال', path: '/dashboard/write', icon: '✍️' },
+    { key: 'my-articles', label: 'مقالاتي', path: '/dashboard/my-articles', icon: '📝' },
+    { key: 'profile', label: 'الملف الشخصي', path: '/dashboard/profile', icon: '👤' },
   ],
 
   // Author menu (basic access)
-  author: [
-    { key: 'overview', label: 'نظرة عامة', path: '/dashboard/overview', icon: '📊' },
-    { key: 'work', label: 'مسوداتي', path: '/dashboard/work', icon: '💼' },
-    { key: 'content', label: 'مقالاتي', path: '/dashboard/content', icon: '📝' },
-    { key: 'analytics', label: 'إحصائياتي', path: '/dashboard/analytics', icon: '📈' },
-    { key: 'settings', label: 'إعداداتي', path: '/dashboard/settings', icon: '⚙️' },
+  writer: [
+    { key: 'overview', label: 'نظرة عامة', path: '/dashboard', icon: '📊' },
+    { key: 'write', label: 'كتابة مقال جديد', path: '/dashboard/write', icon: '✍️' },
+    { key: 'my-articles', label: 'مقالاتي', path: '/dashboard/my-articles', icon: '📝' },
+    { key: 'profile', label: 'الملف الشخصي', path: '/dashboard/profile', icon: '👤' },
   ],
 
   // Editor menu (can review content)
   editor: [
-    { key: 'overview', label: 'نظرة عامة', path: '/dashboard/overview', icon: '📊' },
-    { key: 'work', label: 'مراجعة المحتوى', path: '/dashboard/work', icon: '💼' },
-    { key: 'content', label: 'إدارة المحتوى', path: '/dashboard/content', icon: '📝' },
-    { key: 'analytics', label: 'التحليلات', path: '/dashboard/analytics', icon: '📈' },
-    { key: 'settings', label: 'الإعدادات', path: '/dashboard/settings', icon: '⚙️' },
+    { key: 'overview', label: 'نظرة عامة', path: '/dashboard', icon: '📊' },
+    { key: 'editor', label: 'مراجعة المقالات', path: '/dashboard/editor', icon: '📋' },
+    { key: 'write', label: 'كتابة مقال جديد', path: '/dashboard/write', icon: '✍️' },
+    { key: 'my-articles', label: 'مقالاتي', path: '/dashboard/my-articles', icon: '📝' },
+    { key: 'profile', label: 'الملف الشخصي', path: '/dashboard/profile', icon: '👤' },
   ],
 
   // Editor-in-Chief menu (can manage editors)
-  editorInChief: [
-    { key: 'overview', label: 'نظرة عامة', path: '/dashboard/overview', icon: '📊' },
-    { key: 'work', label: 'إدارة المراجعات', path: '/dashboard/work', icon: '💼' },
-    { key: 'content', label: 'إدارة المحتوى', path: '/dashboard/content', icon: '📝' },
-    { key: 'analytics', label: 'التحليلات', path: '/dashboard/analytics', icon: '📈' },
-    { key: 'settings', label: 'إعدادات التحرير', path: '/dashboard/settings', icon: '⚙️' },
+  'editor-in-chief': [
+    { key: 'overview', label: 'نظرة عامة', path: '/dashboard', icon: '📊' },
+    { key: 'chief', label: 'لوحة رئيس التحرير', path: '/dashboard/chief', icon: '🎯' },
+    { key: 'editor', label: 'مراجعة المقالات', path: '/dashboard/editor', icon: '📋' },
+    { key: 'write', label: 'كتابة مقال جديد', path: '/dashboard/write', icon: '✍️' },
+    { key: 'my-articles', label: 'مقالاتي', path: '/dashboard/my-articles', icon: '📝' },
+    { key: 'profile', label: 'الملف الشخصي', path: '/dashboard/profile', icon: '👤' },
   ],
 
   // Admin menu (full access)
   admin: [
-    { key: 'overview', label: 'نظرة عامة', path: '/dashboard/overview', icon: '📊' },
-    { key: 'work', label: 'إدارة النظام', path: '/dashboard/work', icon: '💼' },
-    { key: 'content', label: 'إدارة المحتوى', path: '/dashboard/content', icon: '📝' },
-    { key: 'analytics', label: 'التحليلات', path: '/dashboard/analytics', icon: '📈' },
-    { key: 'settings', label: 'إعدادات النظام', path: '/dashboard/settings', icon: '⚙️' },
+    { key: 'overview', label: 'نظرة عامة', path: '/dashboard', icon: '📊' },
+    { key: 'chief', label: 'لوحة رئيس التحرير', path: '/dashboard/chief', icon: '🎯' },
+    { key: 'editor', label: 'مراجعة المقالات', path: '/dashboard/editor', icon: '📋' },
+    { key: 'write', label: 'كتابة مقال جديد', path: '/dashboard/write', icon: '✍️' },
+    { key: 'my-articles', label: 'مقالاتي', path: '/dashboard/my-articles', icon: '📝' },
+    { key: 'profile', label: 'الملف الشخصي', path: '/dashboard/profile', icon: '👤' },
   ],
 
   // Owner menu (highest access)
   owner: [
-    { key: 'overview', label: 'نظرة عامة', path: '/dashboard/overview', icon: '📊' },
-    { key: 'work', label: 'إدارة الشركة', path: '/dashboard/work', icon: '💼' },
-    { key: 'content', label: 'إدارة المحتوى', path: '/dashboard/content', icon: '📝' },
-    { key: 'analytics', label: 'التحليلات', path: '/dashboard/analytics', icon: '📈' },
-    { key: 'settings', label: 'إعدادات الشركة', path: '/dashboard/settings', icon: '⚙️' },
+    { key: 'overview', label: 'نظرة عامة', path: '/dashboard', icon: '📊' },
+    { key: 'chief', label: 'لوحة رئيس التحرير', path: '/dashboard/chief', icon: '🎯' },
+    { key: 'editor', label: 'مراجعة المقالات', path: '/dashboard/editor', icon: '📋' },
+    { key: 'write', label: 'كتابة مقال جديد', path: '/dashboard/write', icon: '✍️' },
+    { key: 'my-articles', label: 'مقالاتي', path: '/dashboard/my-articles', icon: '📝' },
+    { key: 'profile', label: 'الملف الشخصي', path: '/dashboard/profile', icon: '👤' },
   ],
 }
