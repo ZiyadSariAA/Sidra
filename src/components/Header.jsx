@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { logout } from '../services/firebaseAuth';
 import Logo from './Logo';
@@ -12,6 +12,7 @@ const Header = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -76,12 +77,20 @@ const Header = () => {
     return 'م';
   };
 
+  // Helper function to check if a link is active
+  const isActiveLink = (path) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.startsWith(path);
+  };
+
   // عرض loading state حتى تستقر حالة المصادقة
   const shouldShowLoading = loading || !isInitialized;
   const canShowAuthState = !shouldShowLoading;
 
   return (
-    <header className="bg-white shadow-lg">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-lg border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -95,19 +104,54 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8 space-x-reverse">
-            <Link to="/" className="text-gray-700 hover:text-[#6D8751] px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <Link 
+              to="/" 
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActiveLink('/') 
+                  ? 'text-[#6D8751] bg-[#6D8751] bg-opacity-10 border-b-2 border-[#6D8751]' 
+                  : 'text-gray-700 hover:text-[#6D8751] hover:bg-gray-50'
+              }`}
+            >
               الرئيسية
             </Link>
-            <Link to="/articles" className="text-gray-700 hover:text-[#6D8751] px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <Link 
+              to="/articles" 
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActiveLink('/articles') 
+                  ? 'text-[#6D8751] bg-[#6D8751] bg-opacity-10 border-b-2 border-[#6D8751]' 
+                  : 'text-gray-700 hover:text-[#6D8751] hover:bg-gray-50'
+              }`}
+            >
               المقالات
             </Link>
-            <Link to="/series" className="text-gray-700 hover:text-[#6D8751] px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <Link 
+              to="/series" 
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActiveLink('/series') 
+                  ? 'text-[#6D8751] bg-[#6D8751] bg-opacity-10 border-b-2 border-[#6D8751]' 
+                  : 'text-gray-700 hover:text-[#6D8751] hover:bg-gray-50'
+              }`}
+            >
               السلسلات
             </Link>
-            <Link to="/episodes" className="text-gray-700 hover:text-[#6D8751] px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <Link 
+              to="/episodes" 
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActiveLink('/episodes') 
+                  ? 'text-[#6D8751] bg-[#6D8751] bg-opacity-10 border-b-2 border-[#6D8751]' 
+                  : 'text-gray-700 hover:text-[#6D8751] hover:bg-gray-50'
+              }`}
+            >
               الإذاعة
             </Link>
-            <Link to="/about" className="text-gray-700 hover:text-[#6D8751] px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <Link 
+              to="/about" 
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActiveLink('/about') 
+                  ? 'text-[#6D8751] bg-[#6D8751] bg-opacity-10 border-b-2 border-[#6D8751]' 
+                  : 'text-gray-700 hover:text-[#6D8751] hover:bg-gray-50'
+              }`}
+            >
               من نحن
             </Link>
           </nav>
@@ -159,42 +203,66 @@ const Header = () => {
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               <Link
                 to="/"
-                className="text-gray-700 hover:text-[#6D8751] block px-3 py-2 rounded-md text-base font-medium transition-colors"
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  isActiveLink('/') 
+                    ? 'text-[#6D8751] bg-[#6D8751] bg-opacity-10 border-r-2 border-[#6D8751]' 
+                    : 'text-gray-700 hover:text-[#6D8751] hover:bg-gray-50'
+                }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 الرئيسية
               </Link>
               <Link
                 to="/about"
-                className="text-gray-700 hover:text-[#6D8751] block px-3 py-2 rounded-md text-base font-medium transition-colors"
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  isActiveLink('/about') 
+                    ? 'text-[#6D8751] bg-[#6D8751] bg-opacity-10 border-r-2 border-[#6D8751]' 
+                    : 'text-gray-700 hover:text-[#6D8751] hover:bg-gray-50'
+                }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 من نحن
               </Link>
               <Link
                 to="/series"
-                className="text-gray-700 hover:text-[#6D8751] block px-3 py-2 rounded-md text-base font-medium transition-colors"
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  isActiveLink('/series') 
+                    ? 'text-[#6D8751] bg-[#6D8751] bg-opacity-10 border-r-2 border-[#6D8751]' 
+                    : 'text-gray-700 hover:text-[#6D8751] hover:bg-gray-50'
+                }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 المسلسلات
               </Link>
               <Link
                 to="/episodes"
-                className="text-gray-700 hover:text-[#6D8751] block px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActiveLink('/episodes') 
+                    ? 'text-[#6D8751] bg-[#6D8751] bg-opacity-10 border-r-2 border-[#6D8751]' 
+                    : 'text-gray-700 hover:text-[#6D8751] hover:bg-gray-50'
+                }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 الحلقات
               </Link>
               <Link
                 to="/articles"
-                className="text-gray-700 hover:text-[#6D8751] block px-3 py-2 rounded-md text-base font-medium transition-colors"
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  isActiveLink('/articles') 
+                    ? 'text-[#6D8751] bg-[#6D8751] bg-opacity-10 border-r-2 border-[#6D8751]' 
+                    : 'text-gray-700 hover:text-[#6D8751] hover:bg-gray-50'
+                }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 المقالات
               </Link>
               <Link
                 to="/join"
-                className="text-gray-700 hover:text-[#6D8751] block px-3 py-2 rounded-md text-base font-medium transition-colors"
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  isActiveLink('/join') 
+                    ? 'text-[#6D8751] bg-[#6D8751] bg-opacity-10 border-r-2 border-[#6D8751]' 
+                    : 'text-gray-700 hover:text-[#6D8751] hover:bg-gray-50'
+                }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 انضم إلينا
@@ -211,7 +279,11 @@ const Header = () => {
                   {userProfile?.role !== 'reader' && (
                     <Link
                       to="/dashboard"
-                      className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-green-600 transition-colors"
+                      className={`block px-3 py-2 text-base font-medium transition-colors ${
+                        isActiveLink('/dashboard') 
+                          ? 'text-[#6D8751] bg-[#6D8751] bg-opacity-10 border-r-2 border-[#6D8751]' 
+                          : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'
+                      }`}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       لوحة التحكم

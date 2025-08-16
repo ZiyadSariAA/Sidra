@@ -348,36 +348,6 @@ const Join = () => {
           </div>
         </div>
       </section>
-
-      {/* معلومات التواصل */}
-      <section id="contact" className="py-16 bg-white">
-        <div className="responsive-container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">معلومات التواصل</h2>
-            <div className="w-24 h-1 bg-[#6D8751] mx-auto mb-8"></div>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="text-4xl mb-4">📧</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">البريد الإلكتروني</h3>
-              <p className="text-[#6D8751] font-medium">careers@sidra.com</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="text-4xl mb-4">📞</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">الهاتف</h3>
-              <p className="text-[#6D8751] font-medium">+966 11 123 4567</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="text-4xl mb-4">📍</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">العنوان</h3>
-              <p className="text-[#6D8751] font-medium">الرياض، المملكة العربية السعودية</p>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   )
 }

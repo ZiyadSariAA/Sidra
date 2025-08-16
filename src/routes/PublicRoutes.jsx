@@ -19,7 +19,7 @@ const PublicRoutes = () => {
   return (
     <div className="min-h-screen bg-gray-50" dir="rtl">
       <Header />
-      <main>
+      <main className="pt-16">
         <Routes>
           {/* Public Pages */}
           <Route path="/" element={<Home />} />

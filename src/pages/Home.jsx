@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay, Pagination } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/pagination'
 import ArticleCard from '../components/ArticleCard'
 import EpisodeCard from '../components/EpisodeCard'
 import SeriesCard from '../components/SeriesCard'
@@ -18,6 +22,55 @@ const Home = () => {
   const articlesRef = useRef(null);
   const episodesRef = useRef(null);
   const seriesRef = useRef(null);
+
+  // بيانات الكاروسيل
+  const slides = [
+    {
+      id: 'logo-feedback',
+      title: 'اللوقو المقترح',
+      subtitle: 'شعار سِدرة الجديد - نريد سماع رأيك',
+      ctaText: 'شارك رأيك',
+      ctaHref: '/about',
+      imageUrl: '/assets/logo.svg',
+      alt: 'شعار سِدرة المقترح',
+      theme: 'light'
+    },
+    {
+      id: 'interns',
+      title: 'تم الافتتاح – نحتاج متدربين!',
+      subtitle: 'انضم لرحلة بناء منصة عربية حديثة.',
+      ctaText: 'قدّم الآن',
+      ctaHref: '/join',
+      imageUrl: '/assets/6x4 (2)_page-0001.jpg',
+      alt: 'إعلان فرص التدريب',
+      theme: 'dark'
+    }
+  ];
+
+  // Fallback image and data guard
+  const FALLBACK = "/assets/6x4 (2)_page-0001.jpg";
+  
+  const items = Array.isArray(slides) && slides.length ? slides : [{
+    id: "fallback",
+    title: "أهلاً بك في سدرة",
+    subtitle: "منصة عربية للثقافة والفكر.",
+    ctaText: "استكشف",
+    ctaHref: "/articles",
+    imageUrl: FALLBACK,
+    alt: "Sidrah hero banner",
+    theme: "dark"
+  }];
+
+  // Debug: تأكد من البيانات
+  console.log('Slides:', slides);
+  console.log('Items:', items);
+
+  // Helper to handle image error
+  const withFallback = (e) => {
+    if (e?.target && e.target.src !== window.location.origin + FALLBACK) {
+      e.target.src = FALLBACK;
+    }
+  };
 
   // بيانات تجريبية للمقالات
   const articles = [
@@ -242,17 +295,62 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gray-50" dir="rtl">
       {/* Hero Section */}
-      <section className="bg-white mobile-spacing">
-        <div className="responsive-container">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="responsive-title-xl text-gray-900 mobile-mb animate-fade-in">
-              سِدرة
-              <span className="responsive-title-lg block text-[#6D8751] mt-2 sm:mt-4 animate-slide-up">منصة الثقافة والفكر العربي</span>
-            </h1>
-            <p className="responsive-body-lg text-gray-700 max-w-3xl mx-auto mobile-mb animate-fade-in-delay">
-              منصة إعلامية عربية تركز على المحتوى الثقافي والفكري، 
-              نقدم مقالات وحلقات وسلسلة تثري الفكر والثقافة
-            </p>
+      <section className="bg-white pt-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-3xl overflow-hidden shadow-sm ring-1 ring-[#6D8751]/15">
+            <Swiper
+              dir="rtl"
+              modules={[Autoplay, Pagination]}
+              autoplay={{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+              pagination={{ clickable: true }}
+              loop={true}
+              speed={550}
+              className="h-[220px] sm:h-[260px] md:h-[320px] lg:h-[380px] xl:h-[420px]"
+            >
+              {items.map((slide, idx) => (
+                <SwiperSlide key={`${slide.id}-${idx}`}>
+                  <div className="relative w-full h-full">
+                    <img
+                      src={slide.imageUrl || FALLBACK}
+                      alt={slide.alt || slide.title || "Promo"}
+                      className="w-full h-full object-cover object-center"
+                      loading="eager"
+                      onError={(e) => {
+                        if (e.target.src !== FALLBACK) {
+                          e.target.src = FALLBACK;
+                        }
+                      }}
+                    />
+                    {/* تعتيم أسود ناعم */}
+                    <div className="absolute inset-0 bg-black/70 lg:bg-black/65" />
+                    {/* المحتوى */}
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full text-white px-6 sm:px-10">
+                        <div className="max-w-2xl ms-auto lg:me-8">
+                          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight">
+                            {slide.title}
+                          </h2>
+                          {slide.subtitle && (
+                            <p className="mt-3 text-base sm:text-lg text-white/90">
+                              {slide.subtitle}
+                            </p>
+                          )}
+                          {slide.ctaText && (
+                            <Link
+                              to={slide.ctaHref}
+                              className="mt-6 inline-flex items-center gap-2 rounded-xl px-5 py-3 bg-[#6D8751] hover:bg-[#5A6F42] transition"
+                              aria-label={slide.ctaText}
+                            >
+                              {slide.ctaText}
+                            </Link>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         </div>
       </section>
@@ -403,65 +501,6 @@ const Home = () => {
           )}
         </div>
       </section>
-
-      {/* قسم الإحصائيات */}
-      <section className="bg-white py-20">
-        <div className="responsive-container">
-          <div className="text-center mb-16">
-            <h2 className="responsive-title-md text-gray-900 mb-4">
-              إحصائيات سِدرة
-            </h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              أرقام تعكس ثقة مجتمعنا في محتوانا الثقافي والفكري
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-            <div className="group">
-              <div className="w-24 h-24 bg-gradient-to-br from-[#6D8751] to-[#5a6f42] rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300 shadow-lg">
-                <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 5.477 5.754 5 7.5 5s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 19 16.5 19c-1.746 0-3.332-.523-4.5-1.253" />
-                </svg>
-              </div>
-              <div className="text-4xl font-bold text-[#6D8751] mb-3 group-hover:text-[#5a6f42] transition-colors">500+</div>
-              <div className="text-gray-700 text-lg font-medium group-hover:text-[#6D8751] transition-colors">مقالة منشورة</div>
-            </div>
-            
-            <div className="group">
-              <div className="w-24 h-24 bg-gradient-to-br from-[#6D8751] to-[#5a6f42] rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300 shadow-lg">
-                <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                </svg>
-              </div>
-              <div className="text-4xl font-bold text-[#6D8751] mb-3 group-hover:text-[#5a6f42] transition-colors">50+</div>
-              <div className="text-gray-700 text-lg font-medium group-hover:text-[#6D8751] transition-colors">حلقة إذاعية</div>
-            </div>
-            
-            <div className="group">
-              <div className="w-24 h-24 bg-gradient-to-br from-[#6D8751] to-[#5a6f42] rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300 shadow-lg">
-                <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <div className="text-4xl font-bold text-[#6D8751] mb-3 group-hover:text-[#5a6f42] transition-colors">100K+</div>
-              <div className="text-gray-700 text-lg font-medium group-hover:text-[#6D8751] transition-colors">قارئ شهرياً</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <div className="text-center py-16">
-        <Link
-          to="/articles"
-          className="inline-flex items-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white bg-[#6D8751] hover:bg-[#5a6f42] transition-all duration-300 hover:scale-105 shadow-lg"
-        >
-          اقرأ المقالات
-          <svg className="w-5 h-5 mr-2 rtl:ml-2 rtl:mr-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-          </svg>
-        </Link>
-      </div>
 
       {/* Auth Modal */}
       <AuthModal 
